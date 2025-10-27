@@ -20,8 +20,9 @@ def healthz():
 def root():
     return {"message": "API is up"}
 
-from routes import user, project, conversation
+from routes import user, project, conversation, datasets
 
 app.include_router(user.router)
 app.include_router(project.router)
 app.include_router(conversation.router)
+app.include_router(datasets.router)

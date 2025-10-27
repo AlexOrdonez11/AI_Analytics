@@ -82,7 +82,7 @@ function useWorkspace(projectId) {
  * Workspace page
  * - Auto-splits into two columns when analytics exist
  */
-export default function Workspace({ projectId }) {
+export default function Workspace({ projectId, projectName }) {
   const { messages, analyticsItems, setAnalyticsItems, sendMessage, clearAnalytics } = useWorkspace(projectId)
   const split = analyticsItems.length > 0
 
@@ -90,14 +90,15 @@ export default function Workspace({ projectId }) {
     <div className="mx-auto max-w-6xl px-4 py-4">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h2 className="text-xl font-semibold">Workspace</h2>
-          <p className="text-sm text-neutral-400">Project: {projectId}</p>
+          <h2 className="text-xl font-semibold">
+            {projectName || 'Workspace'}
+          </h2>
+          <p className="text-sm text-neutral-400">
+            {projectName ? `Project ID: ${projectId}` : `Project: ${projectId}`}
+          </p>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={clearAnalytics}
-            className="text-sm px-3 py-1 rounded-xl bg-neutral-800 hover:bg-neutral-700"
-          >
+          <button onClick={clearAnalytics} className="text-sm px-3 py-1 rounded-xl bg-neutral-800 hover:bg-neutral-700">
             Clear analytics
           </button>
         </div>

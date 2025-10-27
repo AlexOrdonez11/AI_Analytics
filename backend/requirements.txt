@@ -6,9 +6,7 @@ python-multipart>=0.0.9,<0.1
 requests>=2.31,<3.0
 pydantic[email]>=2.6,<3.0
 dnspython>=2.4,<3.0
-
-# MongoDB async driver
+google-cloud-storage>=2.18.0
+pandas>=2.2.2,<3.0
 motor>=3.3,<4.0
-
-# (Optional) OpenAI SDK
-openai>=1.43,<2.0
+openai>=1.43

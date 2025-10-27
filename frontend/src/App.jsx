@@ -12,43 +12,68 @@ export default function App() {
   const { hash, push } = useHashRoute()
   const { projects, createProject } = useProjectStore(user)
 
+  // Start empty; decide later once projects are loaded
   const [currentProjectId, setCurrentProjectId] = React.useState(() => {
-    try { return JSON.parse(localStorage.getItem('app:currentProject')) || projects[0]?.id || 'p1' } catch { return 'p1' }
+    try { return JSON.parse(localStorage.getItem('app:currentProject')) || null } catch { return null }
   })
-  React.useEffect(() => localStorage.setItem('app:currentProject', JSON.stringify(currentProjectId)), [currentProjectId])
+  React.useEffect(() => {
+    if (currentProjectId) {
+      localStorage.setItem('app:currentProject', JSON.stringify(currentProjectId))
+    }
+  }, [currentProjectId])
 
+  // Routing after login
   React.useEffect(() => {
     if (!user) {
       push(routes.login)
       return
     }
-    if (!currentProjectId) {
-      const fallback = projects[0]?.id || 'p1'
+    // If no project selected yet, choose the most recent loaded one
+    if (!currentProjectId && projects.length > 0) {
+      const fallback = projects[0].id // listProjectsByUser is sorted by updatedAt desc in our backend
       setCurrentProjectId(fallback)
-      localStorage.setItem('app:currentProject', JSON.stringify(fallback))
     }
     if (hash !== routes.workspace) {
       push(routes.workspace)
     }
-  }, [user, projects, currentProjectId])
+  }, [user, projects.length])
 
-  const onOpenProject = (pid) => { setCurrentProjectId(pid); push(routes.workspace) }
+  const onOpenProject = (pid) => {
+    setCurrentProjectId(pid)
+    // persist immediately to avoid any race with effects
+    localStorage.setItem('app:currentProject', JSON.stringify(pid))
+    push(routes.workspace)
+  }
+
+  const currentProject = React.useMemo(
+    () => projects.find(p => p.id === currentProjectId),
+    [projects, currentProjectId]
+  )
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       <Header user={user} onLogout={logout} onNav={push} />
+
       {!user ? (
-        <LoginPage
-          onLoginEmail={async (email, password) => { await loginEmail(email, password); push(routes.workspace) }}
-          onRegister={async (payload) => { await register(payload); push(routes.workspace) }}
-        />
+        <LoginPage /* ... */ />
       ) : hash === routes.projects ? (
-        <ProjectsHome projects={projects} onCreate={createProject} onOpen={onOpenProject} />
+        <ProjectsHome
+          projects={projects}
+          onCreate={async (name, description='') => {
+            const p = await createProject(name, description)
+            onOpenProject(p.id)
+          }}
+          onOpen={onOpenProject}
+        />
       ) : (
-        <Workspace projectId={currentProjectId} />
-      )}
+        <Workspace
+          projectId={currentProjectId}
+          projectName={currentProject?.name}
+        />
+      )}  
+
       <footer className="mt-12 py-8 text-center text-xs text-neutral-500">
-        Built with ❤️ – Chat-Driven Analytics UI (demo). Replace mocks with real auth, data, and models.
+        Built with ❤️ – Chat-Driven Analytics UI
       </footer>
     </div>
   )

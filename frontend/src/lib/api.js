@@ -35,3 +35,34 @@ export const api = {
   deleteConversation: (conversation_id) =>
     request(`/conversations/${encodeURIComponent(conversation_id)}`, { method: "DELETE" }),
 };
+
+export const datasetsApi = {
+  uploadDataset: async ({ project_id, file, user_id }) => {
+    const form = new FormData()
+    form.append('project_id', project_id)
+    if (user_id) form.append('user_id', user_id)
+    form.append('file', file)
+    const res = await fetch(`${API_BASE}/datasets/upload`, { method: 'POST', body: form })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.detail || 'Upload failed')
+    return data
+  },
+  listProjectDatasets: async (project_id) => {
+    const res = await fetch(`${API_BASE}/projects/${encodeURIComponent(project_id)}/datasets`)
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.detail || 'List datasets failed')
+    return data
+  },
+  getSignedDownloadUrl: async (dataset_id) => {
+    const res = await fetch(`${API_BASE}/datasets/${encodeURIComponent(dataset_id)}/signed-url`)
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.detail || 'Signed URL failed')
+    return data.url
+  },
+  deleteDataset: async (dataset_id) => {
+    const res = await fetch(`${API_BASE}/datasets/${encodeURIComponent(dataset_id)}`, { method: 'DELETE' })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.detail || 'Delete failed')
+    return data
+  },
+}
