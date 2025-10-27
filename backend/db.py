@@ -17,6 +17,5 @@ except Exception as e:
 
 db = client["AI_Analytics"]
 users_collection = db["Users"]
-users_collection.create_index("email", unique=True)
 project_collection = db["Projects"]
 conversations_collection = db["Conversations"]
