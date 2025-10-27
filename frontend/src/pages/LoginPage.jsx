@@ -1,22 +1,28 @@
 import React from 'react'
 import Card from '../components/Card.jsx'
 import TextInput from '../components/TextInput.jsx'
-import { useAuth } from '../hooks/useAuth.js'
 
-export default function LoginPage() {
+export default function LoginPage({ onLoginEmail, onRegister }) {
   const [mode, setMode] = React.useState('login') // 'login' | 'register'
   const [firstname, setFirstname] = React.useState('')
   const [lastname, setLastname] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-
-  const { loginEmail, register, loading, error } = useAuth()
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState(null)
 
   const submit = async () => {
-    if (mode === 'login') {
-      await loginEmail(email, password)
-    } else {
-      await register({ firstname, lastname, email, password })
+    setLoading(true); setError(null)
+    try {
+      if (mode === 'login') {
+        await onLoginEmail(email, password)
+      } else {
+        await onRegister({ firstname, lastname, email, password })
+      }
+    } catch (e) {
+      setError(e.message || 'Login error')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -29,7 +35,6 @@ export default function LoginPage() {
         <p className="text-sm text-neutral-400 mb-6">
           {mode === 'login' ? 'Use your email and password.' : 'Register with your details.'}
         </p>
-
         <div className="space-y-3">
           {mode === 'register' && (
             <>
@@ -45,9 +50,7 @@ export default function LoginPage() {
             placeholder="••••••••"
             className="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 outline-none focus:ring-2 focus:ring-cyan-500"
           />
-
           {error && <div className="text-sm text-red-400">{error}</div>}
-
           <button
             disabled={loading}
             onClick={submit}
@@ -55,7 +58,6 @@ export default function LoginPage() {
           >
             {loading ? 'Working…' : (mode === 'login' ? 'Sign in' : 'Create account')}
           </button>
-
           <div className="flex items-center justify-between text-xs text-neutral-400 pt-2">
             <button onClick={() => setMode(mode === 'login' ? 'register' : 'login')} className="hover:text-cyan-300">
               {mode === 'login' ? 'Need an account? Register' : 'Have an account? Sign in'}

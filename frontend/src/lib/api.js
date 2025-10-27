@@ -12,10 +12,26 @@ async function request(path, { method = "GET", body, headers = {} } = {}) {
 }
 
 export const api = {
+  // auth 
   loginEmail: (email, password) => request("/login", { method: "POST", body: { email, password } }),
   register: (payload) => request("/users", { method: "POST", body: payload }),
   meByEmail: (email) => request(`/user?email=${encodeURIComponent(email)}`),
-  getUser: (id) => request(`/users/${id}`),
-  deleteUser: (id) => request(`/users/${id}`, { method: "DELETE" }),
-  updateUser: (id, payload) => request(`/users/${id}`, { method: "PUT", body: payload }),
+
+  // projects
+  listProjectsByUser: (userId) => request(`/projects/user/${encodeURIComponent(userId)}`),
+  getProject: (projectId) => request(`/projects/${encodeURIComponent(projectId)}`),
+  createProject: ({ name, description, user_id }) =>
+    request("/projects", { method: "POST", body: { name, description, user_id } }),
+  updateProject: (projectId, patch) =>
+    request(`/projects/${encodeURIComponent(projectId)}`, { method: "PUT", body: patch }),
+  deleteProject: (projectId) =>
+    request(`/projects/${encodeURIComponent(projectId)}`, { method: "DELETE" }),
+
+  // conversations
+  listConversations: ({ project_id, skip = 0, limit = 100, sort_asc = false }) =>
+    request(`/conversations/${encodeURIComponent(project_id)}?skip=${skip}&limit=${limit}&sort_asc=${sort_asc}`),
+  createConversation: ({ project_id, role, message }) =>
+    request("/conversations", { method: "POST", body: { project_id, role, message } }),
+  deleteConversation: (conversation_id) =>
+    request(`/conversations/${encodeURIComponent(conversation_id)}`, { method: "DELETE" }),
 };
