@@ -55,7 +55,10 @@ export default function App() {
       <Header user={user} onLogout={logout} onNav={push} />
 
       {!user ? (
-        <LoginPage /* ... */ />
+        <LoginPage
+          onLoginEmail={async (email, password) => { await loginEmail(email, password); push(routes.workspace) }}
+          onRegister={async (payload) => { await register(payload); push(routes.workspace) }}
+        />
       ) : hash === routes.projects ? (
         <ProjectsHome
           projects={projects}

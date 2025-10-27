@@ -10,3 +10,6 @@ google-cloud-storage>=2.18.0
 pandas>=2.2.2,<3.0
 motor>=3.3,<4.0
 openai>=1.43
+langchain
+langchain-openai
+langchain-community

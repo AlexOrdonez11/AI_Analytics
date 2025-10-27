@@ -34,6 +34,18 @@ export const api = {
     request("/conversations", { method: "POST", body: { project_id, role, message } }),
   deleteConversation: (conversation_id) =>
     request(`/conversations/${encodeURIComponent(conversation_id)}`, { method: "DELETE" }),
+
+    // analyst
+    analystChat: async ({ project_id, message, dataset_id=null }) => {
+        const res = await fetch(`${API_BASE}/analyst/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project_id, message, dataset_id }),
+        })
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok) throw new Error(data?.detail || "Analyst chat failed")
+        return data
+    },
 };
 
 export const datasetsApi = {
