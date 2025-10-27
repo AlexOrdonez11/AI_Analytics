@@ -1,0 +1,12 @@
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.24,<1.0
+pydantic>=2.6,<3.0
+pydantic-settings>=2.2,<3.0
+python-multipart>=0.0.9,<0.1
+requests>=2.31,<3.0
+
+# MongoDB async driver
+motor>=3.3,<4.0
+
+# (Optional) OpenAI SDK
+openai>=1.43,<2.0
