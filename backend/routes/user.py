@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from backend.db import users_collection
+from db import users_collection
 from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from bson import ObjectId
