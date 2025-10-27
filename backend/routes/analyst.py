@@ -100,7 +100,7 @@ def get_history(session_id: str):
     )
 
 # LLM (choose your preferred model)
-llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-5-mini"), temperature=0.2)
+llm = ChatOpenAI(api_key=os.getenv("OPENAI_API_KEY"), model=os.getenv("OPENAI_MODEL", "gpt-5-mini"), temperature=0.2)
 
 chain = prompt | llm
 agent_with_history = RunnableWithMessageHistory(
