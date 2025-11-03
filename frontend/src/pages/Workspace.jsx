@@ -37,7 +37,7 @@ function useWorkspace(projectId) {
     setMessages(prev => [...prev, userLocal])
 
     // persist user message (optional; you likely already do this)
-    try { await api.createConversation({ project_id: projectId, role: 'user', message: { text } }) } catch {}
+    //try { await api.createConversation({ project_id: projectId, role: 'user', message: { text } }) } catch {}
 
     // call analyst agent
     let reply = "I'm having trouble analyzing right now."
@@ -52,7 +52,7 @@ function useWorkspace(projectId) {
     setMessages(prev => [...prev, botLocal])
 
     // persist assistant message (optional; for unified history)
-    try { await api.createConversation({ project_id: projectId, role: 'assistant', message: { text: reply } }) } catch {}
+    //try { await api.createConversation({ project_id: projectId, role: 'assistant', message: { text: reply } }) } catch {}
   }
 
   const clearAnalytics = () => setAnalyticsItems([])
@@ -82,7 +82,7 @@ export default function Workspace({ projectId, projectName }) {
           {split && <AnalyticsPanel items={analyticsItems} setItems={setAnalyticsItems} />}
           <DatasetsPanel projectId={projectId} />
         </div>
-        <div className="min-h-[65vh] ">
+        <div className="min-h-[65vh] space-y-4">
           <ChatPanel messages={messages} onSend={sendMessage} />
         </div>
       </div>

@@ -74,6 +74,8 @@ Your mission: provide as many meaningful insights as possible from the context a
 Be precise, skeptical, and transparent about uncertainty. Avoid fabricating columns that don't exist.
 Prefer concise bullets. If you need clarification, ask ONE clear follow-up question at the end.
 
+The response MUST be in markdown format.
+
 Dataset context (may be empty):
 - Name: {ds_name}
 - GCS: {ds_gcs}
